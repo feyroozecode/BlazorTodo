@@ -1,26 +1,49 @@
 ﻿@page "/todo"
 
-<!-- LOAD JS -->
-@section Scripts {
-  <script src="~/Pages/TodoPage.cshtml.js"></script>
-}
+
 <PageTitle>Taches</PageTitle>
 
-<h2> <b>Taches</b> (@todos.Count(todo => !todo.isDone)) </h2>
+<h2> <b>Taches</b> (@todos.Count(todo => !todo.IsDone)) </h2>
 
 <!-- Listes des taches -->
 <ul>
+
+   <input 
+      style="padding: 10px; font-size: 16px;width: 60%;margin-right: 10px;"
+      placeholder="à faire" @bind="newTodo" />
+   <button 
+      style="background-color: purple; color: white; 
+         padding: 10px;
+         font-size: 16px;
+         background-color:PURPLE;
+         color: white;
+         border: none;" 
+      @onclick="AddTodo">Ajouter</button>
+
    @foreach (var item in todos) 
    {
-    <li>
-        <input type="chackbox" @bind="item.IsDone" />
-        <input type="text" @bind="item.Title" /> 
+    <ul style="list-style-type:none; margin-top: 20px; background-color: White; padding: 10px">
+    <form>
+      <li style="list">
+        <input
+          type="checkbox" @bind="item.IsDone" />
+        <span> @item.Title </span> 
+        <button 
+            style="background-color: red; color: white; 
+               padding: 1px;
+               font-size: 16px;
+               background-color:red;
+               color: white;
+               border: none;
+               text-align: right;
+               "
+            @onclick="DeleteTodo"  >Effacer</button> 
     </li>
+    </form>
+    </ul>
     }
 </ul>
 
-<input placeholder="à faire" @bind="newTodo" />
-<button @onclick="AddTodo">Ajouter</button>
 
 @code {
   private List<TodoItem> todos = new();
@@ -34,5 +57,10 @@
         todos.Add(new TodoItem{ Title = newTodo} );
         newTodo = string.Empty;
      }
+  }
+
+  private void DeleteTodo()
+  {
+      //todos.RemoveAt()
   }
 }

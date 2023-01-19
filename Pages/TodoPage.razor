@@ -1,0 +1,38 @@
+﻿@page "/todo"
+
+<!-- LOAD JS -->
+@section Scripts {
+  <script src="~/Pages/TodoPage.cshtml.js"></script>
+}
+<PageTitle>Taches</PageTitle>
+
+<h2> <b>Taches</b> (@todos.Count(todo => !todo.isDone)) </h2>
+
+<!-- Listes des taches -->
+<ul>
+   @foreach (var item in todos) 
+   {
+    <li>
+        <input type="chackbox" @bind="item.IsDone" />
+        <input type="text" @bind="item.Title" /> 
+    </li>
+    }
+</ul>
+
+<input placeholder="à faire" @bind="newTodo" />
+<button @onclick="AddTodo">Ajouter</button>
+
+@code {
+  private List<TodoItem> todos = new();
+  private string? newTodo;
+
+  // add task; 
+  private void AddTodo()
+  {
+     if(!string.IsNullOrWhiteSpace(newTodo))
+     {
+        todos.Add(new TodoItem{ Title = newTodo} );
+        newTodo = string.Empty;
+     }
+  }
+}

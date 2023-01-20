@@ -10,7 +10,8 @@
 
    <input 
       style="padding: 10px; font-size: 16px;width: 60%;margin-right: 10px;"
-      placeholder="à faire" @bind="newTodo" />
+      placeholder="Faire .." @bind="newTodo" />
+      
    <button 
       style="background-color: purple; color: white; 
          padding: 10px;
@@ -23,11 +24,11 @@
    @foreach (var item in todos) 
    {
     <ul style="list-style-type:none; margin-top: 20px; background-color: White; padding: 10px">
-    <form>
       <li style="list">
         <input
           type="checkbox" @bind="item.IsDone" />
-        <span> @item.Title </span> 
+        <span> @item.Title </span>
+        
         <button 
             style="background-color: red; color: white; 
                padding: 1px;
@@ -37,9 +38,11 @@
                border: none;
                text-align: right;
                "
-            @onclick="DeleteTodo"  >Effacer</button> 
+            @onclick="()=> DeleteTodo(newId)">Effacer</button>
     </li>
-    </form>
+    <li>
+           <span style="font-size:8px; color: grey; margin:0px">ID : @item.Id </span> 
+    </li>
     </ul>
     }
 </ul>
@@ -47,20 +50,43 @@
 
 @code {
   private List<TodoItem> todos = new();
+
+  private Guid newId;
   private string? newTodo;
+  private TodoItem? item; 
 
   // add task; 
-  private void AddTodo()
+  private async Task AddTodo()
   {
-     if(!string.IsNullOrWhiteSpace(newTodo))
+      //HttpClient client = new HttpClient();
+      //var response = await client.DeleteAsync("/api/todo/"+ newId);
+
+     if(!string.IsNullOrWhiteSpace(newTodo) && newId != null)
      {
-        todos.Add(new TodoItem{ Title = newTodo} );
+        newId = Guid.NewGuid();
+        item = new TodoItem{ Id = newId, Title = newTodo} ;
+        todos.Add(item);
+        Console.Write("Todo with "+ newId.ToString()+ " added successfull");
+        
+        //reset vars
         newTodo = string.Empty;
      }
   }
 
-  private void DeleteTodo()
+  private async Task DeleteTodo(Guid id)
   {
-      //todos.RemoveAt()
+    for(int i = todos.Count - 1; i>=0; i--){
+      if(todos[i].Id == id){
+         todos.RemoveAt(i);
+         Console.Write("Item "+ newId + " Deleted successully");
+      }
+    }
   }
+
+  private async Task getTime()
+  {
+   /*
+   */
+  }
+
 }
